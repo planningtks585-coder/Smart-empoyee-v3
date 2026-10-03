@@ -74,6 +74,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         throw new Error(data.error || 'Authentication failed');
       }
 
+      // Auto clear any old login session, tokens, and cached state from other accounts
+      localStorage.clear();
+      sessionStorage.clear();
+
       // Save user session in localStorage
       localStorage.setItem('auth_token', data.token);
       localStorage.setItem('auth_user', JSON.stringify(data.user));

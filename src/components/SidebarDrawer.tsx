@@ -245,6 +245,21 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
               </button>
             )}
 
+            {/* Admin Attendance Ledger (Admins review attendance ledger instead of clock in/out) */}
+            {roleMode === 'admin' && (
+              <button
+                onClick={() => handleSelect('attendance')}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-2xl text-sm font-semibold transition-colors ${
+                  activeTab === 'attendance'
+                    ? 'bg-blue-600 text-white'
+                    : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                <CalendarCheck className="w-5 h-5 text-blue-500" />
+                <span>{t.attendance}</span>
+              </button>
+            )}
+
             {/* Shift Schedules */}
             <button
               onClick={() => handleSelect('shifts')}
@@ -277,42 +292,37 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
               {t.workforce}
             </div>
             <div className="mt-2 space-y-1">
-              <button
-                onClick={() => handleSelect('employees')}
-                className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-xs font-medium transition-colors ${
-                  activeTab === 'employees'
-                    ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
-                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-                }`}
-              >
-                <Users className="w-4 h-4 text-slate-500" />
-                <span>{t.employees}</span>
-              </button>
+              {/* Employees Directory: Admin only */}
+              {roleMode === 'admin' && (
+                <button
+                  onClick={() => handleSelect('employees')}
+                  className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-xs font-medium transition-colors ${
+                    activeTab === 'employees'
+                      ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }`}
+                >
+                  <Users className="w-4 h-4 text-slate-500" />
+                  <span>{t.employees}</span>
+                </button>
+              )}
 
-              <button
-                onClick={() => handleSelect('attendance')}
-                className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-xs font-medium transition-colors ${
-                  activeTab === 'attendance'
-                    ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
-                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-                }`}
-              >
-                <CalendarCheck className="w-4 h-4 text-slate-500" />
-                <span>{t.attendance}</span>
-              </button>
+              {/* Departments Management: Admin only */}
+              {roleMode === 'admin' && (
+                <button
+                  onClick={() => handleSelect('departments')}
+                  className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-xs font-medium transition-colors ${
+                    activeTab === 'departments'
+                      ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }`}
+                >
+                  <Building className="w-4 h-4 text-slate-500" />
+                  <span>{t.departments}</span>
+                </button>
+              )}
 
-              <button
-                onClick={() => handleSelect('departments')}
-                className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-xs font-medium transition-colors ${
-                  activeTab === 'departments'
-                    ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
-                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-                }`}
-              >
-                <Building className="w-4 h-4 text-slate-500" />
-                <span>{t.departments}</span>
-              </button>
-
+              {/* Leave Requests: Staff (own) and Admin (approvals) */}
               <button
                 onClick={() => handleSelect('leave')}
                 className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-xs font-medium transition-colors ${
@@ -333,23 +343,27 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
               {t.operations}
             </div>
             <div className="mt-2 space-y-1">
-              <button
-                onClick={() => handleSelect('locations')}
-                className={`w-full flex items-center justify-between px-4 py-2 rounded-xl text-xs font-medium transition-colors ${
-                  activeTab === 'locations'
-                    ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
-                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <MapPin className="w-4 h-4 text-slate-500" />
-                  <span>{t.locations}</span>
-                </div>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 font-semibold">
-                  3
-                </span>
-              </button>
+              {/* Locations: Admin only */}
+              {roleMode === 'admin' && (
+                <button
+                  onClick={() => handleSelect('locations')}
+                  className={`w-full flex items-center justify-between px-4 py-2 rounded-xl text-xs font-medium transition-colors ${
+                    activeTab === 'locations'
+                      ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <MapPin className="w-4 h-4 text-slate-500" />
+                    <span>{t.locations}</span>
+                  </div>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 font-semibold">
+                    3
+                  </span>
+                </button>
+              )}
 
+              {/* Reports */}
               <button
                 onClick={() => handleSelect('reports')}
                 className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-xs font-medium transition-colors ${
@@ -362,17 +376,20 @@ export const SidebarDrawer: React.FC<SidebarDrawerProps> = ({
                 <span>{t.reports}</span>
               </button>
 
-              <button
-                onClick={() => handleSelect('settings')}
-                className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-xs font-medium transition-colors ${
-                  activeTab === 'settings'
-                    ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
-                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-                }`}
-              >
-                <Settings className="w-4 h-4 text-slate-500" />
-                <span>{t.systemSettings}</span>
-              </button>
+              {/* System Settings: Admin only */}
+              {roleMode === 'admin' && (
+                <button
+                  onClick={() => handleSelect('settings')}
+                  className={`w-full flex items-center gap-3 px-4 py-2 rounded-xl text-xs font-medium transition-colors ${
+                    activeTab === 'settings'
+                      ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
+                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }`}
+                >
+                  <Settings className="w-4 h-4 text-slate-500" />
+                  <span>{t.systemSettings}</span>
+                </button>
+              )}
             </div>
           </div>
         </div>

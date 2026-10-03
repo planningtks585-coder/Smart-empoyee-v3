@@ -35,6 +35,8 @@ interface ProjectsTasksScreenProps {
   onSetTaskTime?: (taskId: string, loggedMinutes: number) => Promise<void>;
   onDeleteProject?: (projectId: string) => Promise<void>;
   onDeleteTask?: (taskId: string) => Promise<void>;
+  roleMode?: 'admin' | 'manager' | 'user' | 'employee';
+  currentUser?: any;
   lang?: Language;
 }
 
@@ -49,6 +51,8 @@ export const ProjectsTasksScreen: React.FC<ProjectsTasksScreenProps> = ({
   onSetTaskTime,
   onDeleteProject,
   onDeleteTask,
+  roleMode = 'employee',
+  currentUser,
   lang = 'en'
 }) => {
   const t = translations[lang];
@@ -267,14 +271,21 @@ export const ProjectsTasksScreen: React.FC<ProjectsTasksScreenProps> = ({
           </button>
         </div>
 
-        {/* New Project Quick Button */}
-        <button
-          onClick={() => setShowNewProjectModal(true)}
-          className="flex items-center justify-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-md shadow-blue-500/20 active:scale-95 transition-all"
-        >
-          <Plus className="w-4 h-4" />
-          <span>{t.newProject}</span>
-        </button>
+        {/* New Project Quick Button (Admin only) or Scope indicator */}
+        {roleMode === 'admin' ? (
+          <button
+            onClick={() => setShowNewProjectModal(true)}
+            className="flex items-center justify-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs shadow-md shadow-blue-500/20 active:scale-95 transition-all"
+          >
+            <Plus className="w-4 h-4" />
+            <span>{t.newProject}</span>
+          </button>
+        ) : (
+          <span className="flex items-center gap-1.5 text-[11px] font-semibold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-3 py-1.5 rounded-xl border border-blue-200 dark:border-blue-900">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+            <span>{lang === 'km' ? 'កិច្ចការ និងគម្រោងផ្ទាល់ខ្លួន' : 'Your Assigned Tasks & Projects'}</span>
+          </span>
+        )}
       </div>
 
       {viewMode === 'tree' ? (

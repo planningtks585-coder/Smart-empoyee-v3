@@ -42,6 +42,8 @@ interface ExportReportsScreenProps {
   tasks?: Task[];
   shifts?: ShiftItem[];
   metrics?: any;
+  roleMode?: 'admin' | 'manager' | 'user' | 'employee';
+  currentUser?: any;
   lang?: Language;
 }
 
@@ -55,9 +57,14 @@ export const ExportReportsScreen: React.FC<ExportReportsScreenProps> = ({
   tasks = [],
   shifts = [],
   metrics,
+  roleMode = 'employee',
+  currentUser,
   lang = 'en'
 }) => {
   const t = translations[lang];
+  const isEmployeeOnly = roleMode !== 'admin';
+  const currentEmpId = currentUser?.employee?.id || currentUser?.employeeId || (currentUser?.name === 'Cian' ? 'emp_cian' : currentUser?.id);
+  const currentEmpName = currentUser?.name || currentUser?.employee?.name || '';
 
   // Active Report Category Tab
   const [activeReport, setActiveReport] = useState<ReportType>('attendance');

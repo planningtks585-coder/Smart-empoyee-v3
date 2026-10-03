@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Menu, Bell, UserCheck, Shield, Mic, Globe, LogOut, KeyRound, Smartphone } from 'lucide-react';
+import { Menu, Bell, UserCheck, Shield, Mic, Globe, LogOut } from 'lucide-react';
 import { UserRoleMode } from '../types';
 import { Language, translations } from '../i18n/translations';
-import { PWAInstallButton } from './PWAInstallButton';
 
 interface HeaderProps {
   title: string;
@@ -111,53 +110,33 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
 
             {showNotifications && (
-              <div className="absolute right-0 top-12 w-[calc(100vw-2rem)] sm:w-80 max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 p-3 z-50 animate-in fade-in slide-in-from-top-2">
-                <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-700">
-                  <span className="text-xs font-bold text-slate-900 dark:text-white">{t.recentAlerts}</span>
-                  <span className="text-[10px] text-blue-600 font-semibold cursor-pointer" onClick={() => setShowNotifications(false)}>
-                    {t.markAllRead}
-                  </span>
-                </div>
-                <div className="space-y-2 mt-2 max-h-60 overflow-y-auto">
-                  <div className="p-2 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 text-xs">
-                    <div className="font-semibold text-blue-950 dark:text-blue-200">{t.shiftStarted}</div>
-                    <div className="text-slate-600 dark:text-slate-400 text-[11px]">{t.shiftStartedMsg}</div>
+              <>
+                {/* Backdrop for outside click */}
+                <div
+                  className="fixed inset-0 z-40 bg-black/20 backdrop-blur-xs"
+                  onClick={() => setShowNotifications(false)}
+                />
+                <div className="fixed sm:absolute top-16 sm:top-12 left-3 right-3 sm:left-auto sm:right-0 w-auto sm:w-80 max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-3 z-50 animate-in fade-in slide-in-from-top-2">
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-700">
+                    <span className="text-xs font-bold text-slate-900 dark:text-white">{t.recentAlerts}</span>
+                    <span className="text-[10px] text-blue-600 dark:text-blue-400 font-semibold cursor-pointer hover:underline" onClick={() => setShowNotifications(false)}>
+                      {t.markAllRead}
+                    </span>
                   </div>
-                  <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-xs">
-                    <div className="font-semibold text-slate-800 dark:text-slate-200">{t.salesDealWon}</div>
-                    <div className="text-slate-600 dark:text-slate-400 text-[11px]">{t.salesDealWonMsg}</div>
+                  <div className="space-y-2 mt-2 max-h-60 overflow-y-auto">
+                    <div className="p-2 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 text-xs">
+                      <div className="font-semibold text-blue-950 dark:text-blue-200">{t.shiftStarted}</div>
+                      <div className="text-slate-600 dark:text-slate-400 text-[11px]">{t.shiftStartedMsg}</div>
+                    </div>
+                    <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-xs">
+                      <div className="font-semibold text-slate-800 dark:text-slate-200">{t.salesDealWon}</div>
+                      <div className="text-slate-600 dark:text-slate-400 text-[11px]">{t.salesDealWonMsg}</div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </>
             )}
           </div>
-
-          {/* PWA Install Button */}
-          <PWAInstallButton lang={lang} variant="compact" />
-
-          {/* Telegram & WebPush Alerts Settings Button */}
-          {onOpenAlerts && (
-            <button
-              onClick={onOpenAlerts}
-              aria-label="Alerts & Telegram Integration"
-              className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-sky-600 dark:text-sky-400 transition-colors"
-              title="Alerts, WebPush & Telegram Bot"
-            >
-              <Bell className="w-5 h-5" />
-            </button>
-          )}
-
-          {/* Account & Password Settings */}
-          {onOpenAccountSettings && (
-            <button
-              onClick={onOpenAccountSettings}
-              aria-label="Manage Account & Password"
-              className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
-              title={t.manageAccount}
-            >
-              <KeyRound className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-            </button>
-          )}
         </div>
       </div>
     </header>

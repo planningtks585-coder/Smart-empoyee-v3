@@ -106,30 +106,36 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
 
               {/* Notification Popover Dropdown */}
               {showNotifications && (
-                <div className="absolute left-0 top-10 w-64 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200/80 dark:border-slate-700 p-3 z-50 animate-in fade-in slide-in-from-top-2">
-                  <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-700">
-                    <span className="text-xs font-bold text-slate-900 dark:text-white">{t.recentAlerts}</span>
-                    <button
-                      onClick={() => {
-                        setHasUnread(false);
-                        setShowNotifications(false);
-                      }}
-                      className="text-[10px] text-blue-600 dark:text-blue-400 font-semibold hover:underline"
-                    >
-                      {t.markAllRead}
-                    </button>
-                  </div>
-                  <div className="space-y-2 mt-2 max-h-56 overflow-y-auto">
-                    <div className="p-2 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 text-xs">
-                      <div className="font-semibold text-blue-950 dark:text-blue-200">{t.shiftStarted}</div>
-                      <div className="text-slate-600 dark:text-slate-400 text-[11px] mt-0.5">{t.shiftStartedMsg}</div>
+                <>
+                  <div
+                    className="fixed inset-0 z-40 bg-transparent"
+                    onClick={() => setShowNotifications(false)}
+                  />
+                  <div className="absolute right-0 top-10 w-64 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200/80 dark:border-slate-700 p-3 z-50 animate-in fade-in slide-in-from-top-2">
+                    <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-700">
+                      <span className="text-xs font-bold text-slate-900 dark:text-white">{t.recentAlerts}</span>
+                      <button
+                        onClick={() => {
+                          setHasUnread(false);
+                          setShowNotifications(false);
+                        }}
+                        className="text-[10px] text-blue-600 dark:text-blue-400 font-semibold hover:underline"
+                      >
+                        {t.markAllRead}
+                      </button>
                     </div>
-                    <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-xs">
-                      <div className="font-semibold text-slate-800 dark:text-slate-200">{t.salesDealWon}</div>
-                      <div className="text-slate-600 dark:text-slate-400 text-[11px] mt-0.5">{t.salesDealWonMsg}</div>
+                    <div className="space-y-2 mt-2 max-h-56 overflow-y-auto">
+                      <div className="p-2 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 text-xs">
+                        <div className="font-semibold text-blue-950 dark:text-blue-200">{t.shiftStarted}</div>
+                        <div className="text-slate-600 dark:text-slate-400 text-[11px] mt-0.5">{t.shiftStartedMsg}</div>
+                      </div>
+                      <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-700/50 text-xs">
+                        <div className="font-semibold text-slate-800 dark:text-slate-200">{t.salesDealWon}</div>
+                        <div className="text-slate-600 dark:text-slate-400 text-[11px] mt-0.5">{t.salesDealWonMsg}</div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </>
               )}
             </div>
 
@@ -269,6 +275,21 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
             </button>
           )}
 
+          {/* Admin Attendance Ledger (admins do not clock in/out, they review ledger) */}
+          {roleMode === 'admin' && (
+            <button
+              onClick={() => onSelectTab('attendance')}
+              className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                activeTab === 'attendance'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}
+            >
+              <CalendarCheck className="w-4 h-4 shrink-0 text-blue-400" />
+              <span>{t.attendance}</span>
+            </button>
+          )}
+
           <button
             onClick={() => onSelectTab('shifts')}
             className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold transition-all ${
@@ -288,42 +309,37 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
             {t.workforce}
           </div>
           <div className="space-y-0.5">
-            <button
-              onClick={() => onSelectTab('employees')}
-              className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
-                activeTab === 'employees'
-                  ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 font-semibold'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
-            >
-              <Users className="w-4 h-4 text-slate-400 shrink-0" />
-              <span>{t.employees}</span>
-            </button>
+            {/* Employees Directory: Admin only */}
+            {roleMode === 'admin' && (
+              <button
+                onClick={() => onSelectTab('employees')}
+                className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
+                  activeTab === 'employees'
+                    ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 font-semibold'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                <Users className="w-4 h-4 text-slate-400 shrink-0" />
+                <span>{t.employees}</span>
+              </button>
+            )}
 
-            <button
-              onClick={() => onSelectTab('attendance')}
-              className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
-                activeTab === 'attendance'
-                  ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 font-semibold'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
-            >
-              <CalendarCheck className="w-4 h-4 text-slate-400 shrink-0" />
-              <span>{t.attendance}</span>
-            </button>
+            {/* Departments Management: Admin only */}
+            {roleMode === 'admin' && (
+              <button
+                onClick={() => onSelectTab('departments')}
+                className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
+                  activeTab === 'departments'
+                    ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 font-semibold'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                <Building className="w-4 h-4 text-slate-400 shrink-0" />
+                <span>{t.departments}</span>
+              </button>
+            )}
 
-            <button
-              onClick={() => onSelectTab('departments')}
-              className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
-                activeTab === 'departments'
-                  ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 font-semibold'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
-            >
-              <Building className="w-4 h-4 text-slate-400 shrink-0" />
-              <span>{t.departments}</span>
-            </button>
-
+            {/* Leave: Available to both Staff (own requests) and Admin (approvals) */}
             <button
               onClick={() => onSelectTab('leave')}
               className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
@@ -344,23 +360,27 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
             {t.operations}
           </div>
           <div className="space-y-0.5">
-            <button
-              onClick={() => onSelectTab('locations')}
-              className={`w-full flex items-center justify-between px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
-                activeTab === 'locations'
-                  ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 font-semibold'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
-                <span>{t.locations}</span>
-              </div>
-              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 font-mono">
-                3
-              </span>
-            </button>
+            {/* Locations site configuration: Admin only */}
+            {roleMode === 'admin' && (
+              <button
+                onClick={() => onSelectTab('locations')}
+                className={`w-full flex items-center justify-between px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
+                  activeTab === 'locations'
+                    ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 font-semibold'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+                  <span>{t.locations}</span>
+                </div>
+                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 font-mono">
+                  3
+                </span>
+              </button>
+            )}
 
+            {/* Reports: Available to both Staff (own hours) and Admin (company-wide) */}
             <button
               onClick={() => onSelectTab('reports')}
               className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
@@ -373,17 +393,20 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
               <span>{t.reports}</span>
             </button>
 
-            <button
-              onClick={() => onSelectTab('settings')}
-              className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
-                activeTab === 'settings'
-                  ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 font-semibold'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
-            >
-              <Settings className="w-4 h-4 text-slate-400 shrink-0" />
-              <span>{t.systemSettings}</span>
-            </button>
+            {/* System Settings: Admin only */}
+            {roleMode === 'admin' && (
+              <button
+                onClick={() => onSelectTab('settings')}
+                className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
+                  activeTab === 'settings'
+                    ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 font-semibold'
+                    : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                <Settings className="w-4 h-4 text-slate-400 shrink-0" />
+                <span>{t.systemSettings}</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
